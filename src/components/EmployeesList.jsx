@@ -1,18 +1,46 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import * as actionCreators from '../actions';
 
 const useStyles = makeStyles({
   root: {
-    marginTop: '64px',
+    width: '300px',
+  },
+  row: {
+    cursor: 'pointer',
   },
 });
 
-const EmployeesList = () => {
+const EmployeesList = ({ employees, changeCurrentEmployee }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>EmployeesList</div>
+    <TableContainer className={classes.root}>
+      <Table size="small" aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">Фамилия</TableCell>
+            <TableCell align="center">Должность</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {employees.map((employee) => (
+            <TableRow
+              key={employee.personnelNumber}
+              hover
+              className={classes.row}
+              onClick={() => changeCurrentEmployee(employee)}
+            >
+              <TableCell component="th" scope="row" align="center">{employee.surname}</TableCell>
+              <TableCell align="center">{employee.position}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
-export default EmployeesList;
+export default connect((state) => ({ employees: state.employees }), actionCreators)(EmployeesList);
