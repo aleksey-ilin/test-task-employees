@@ -15,7 +15,7 @@ export const attributes = {
     id: 3,
     title: 'Дата рождения',
   },
-  personnelNumber: {
+  personalNumber: {
     id: 4,
     title: 'Табельный номер',
   },

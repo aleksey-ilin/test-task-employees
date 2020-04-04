@@ -16,20 +16,27 @@ const useStyles = makeStyles({
   },
 });
 
-const EmployeeInfo = ({ isShowEmployeeInfo, currentEmployee, toggleShowEmployeeInfo }) => {
+const EmployeeInfo = ({
+  isShowEmployeeInfo,
+  currentEmployee,
+  settingShowAttributes,
+  toggleShowEmployeeInfo,
+}) => {
   const classes = useStyles();
 
   return (
     <Drawer anchor="right" open={isShowEmployeeInfo} onClose={() => toggleShowEmployeeInfo()}>
       <List className={classes.list}>
         {Object.keys(attributes).map((attribute) => (
-          <TextField
-            key={attributes[attribute].id}
-            className={classes.attribute}
-            label={attributes[attribute].title}
-            defaultValue={currentEmployee[attribute]}
-            InputProps={{ readOnly: true }}
-          />
+          settingShowAttributes[attribute] && (
+            <TextField
+              key={attributes[attribute].id}
+              className={classes.attribute}
+              label={attributes[attribute].title}
+              defaultValue={currentEmployee[attribute]}
+              InputProps={{ readOnly: true }}
+            />
+          )
         ))}
       </List>
     </Drawer>
@@ -40,6 +47,7 @@ export default connect(
   (state) => ({
     isShowEmployeeInfo: state.isShowEmployeeInfo,
     currentEmployee: state.currentEmployee,
+    settingShowAttributes: state.settingShowAttributes,
   }),
   actionCreators,
 )(EmployeeInfo);

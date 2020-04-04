@@ -6,7 +6,7 @@ import * as actionCreators from '../actions';
 
 const useStyles = makeStyles({
   root: {
-    width: '300px',
+    width: '330px',
   },
   row: {
     cursor: 'pointer',
@@ -26,17 +26,25 @@ const EmployeesList = ({ employees, changeCurrentEmployee }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {employees.map((employee) => (
-            <TableRow
-              key={employee.personnelNumber}
-              hover
-              className={classes.row}
-              onClick={() => changeCurrentEmployee(employee)}
-            >
-              <TableCell component="th" scope="row" align="center">{employee.surname}</TableCell>
-              <TableCell align="center">{employee.position}</TableCell>
-            </TableRow>
-          ))}
+          {employees.length > 0
+            ? employees.map((employee) => (
+              <TableRow
+                key={employee.personalNumber}
+                hover
+                className={classes.row}
+                onClick={() => changeCurrentEmployee(employee)}
+              >
+                <TableCell component="th" scope="row" align="center">
+                  {employee.surname || 'имя не указано'}
+                </TableCell>
+                <TableCell align="center">{employee.position || 'должность не указана'}</TableCell>
+              </TableRow>
+            ))
+            : (
+              <TableRow>
+                <TableCell colSpan={2} align="center">Список сотрудников пуст</TableCell>
+              </TableRow>
+            )}
         </TableBody>
       </Table>
     </TableContainer>
