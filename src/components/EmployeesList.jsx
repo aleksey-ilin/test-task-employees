@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import * as actionCreators from '../actions';
+import { attributes } from '../employeesData/index';
 
 const useStyles = makeStyles({
   root: {
@@ -49,6 +51,26 @@ const EmployeesList = ({ employees, changeCurrentEmployee }) => {
       </Table>
     </TableContainer>
   );
+};
+
+EmployeesList.propTypes = {
+  employees: PropTypes.arrayOf(PropTypes.shape({
+    ...Object.keys(attributes).reduce(
+      (acc, attribute) => {
+        if (attribute === 'personalNumber') {
+          return ({ ...acc, [attribute]: PropTypes.number });
+        }
+        return ({ ...acc, [attribute]: PropTypes.string });
+      },
+      {},
+    ),
+  })),
+  changeCurrentEmployee: PropTypes.func,
+};
+
+EmployeesList.defaultProps = {
+  employees: [],
+  changeCurrentEmployee: () => null,
 };
 
 export default connect((state) => ({ employees: state.employees }), actionCreators)(EmployeesList);

@@ -27,9 +27,9 @@ const reducer = createReducer(initialState, {
     prevState.currentEmployee = payload;
     prevState.isShowEmployeeInfo = true;
   },
-  [addEmployee]: (state, action) => {
+  [addEmployee]: (state, { payload }) => {
     const prevState = state;
-    prevState.employees.push(action.payload);
+    prevState.employees.push(payload);
   },
   [changeSettingShowAttributes]: (state, { payload }) => {
     const prevState = state;

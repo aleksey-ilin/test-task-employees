@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,6 +44,19 @@ const Settings = ({ settingShowAttributes, changeSettingShowAttributes }) => {
       </TableContainer>
     </Box>
   );
+};
+
+Settings.propTypes = {
+  settingShowAttributes: PropTypes.shape({
+    ...Object.keys(attributes)
+      .reduce((acc, attribute) => ({ ...acc, [attribute]: PropTypes.bool }), {}),
+  }),
+  changeSettingShowAttributes: PropTypes.func,
+};
+
+Settings.defaultProps = {
+  settingShowAttributes: [],
+  changeSettingShowAttributes: () => null,
 };
 
 export default connect(

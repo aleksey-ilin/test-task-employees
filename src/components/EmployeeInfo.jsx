@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Drawer, List, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -41,6 +42,27 @@ const EmployeeInfo = ({
       </List>
     </Drawer>
   );
+};
+
+EmployeeInfo.propTypes = {
+  isShowEmployeeInfo: PropTypes.bool,
+  currentEmployee: PropTypes.shape({
+    ...Object.keys(attributes).reduce(
+      (acc, attribute) => ({ ...acc, [attribute]: PropTypes.string || PropTypes.number }),
+      {},
+    ),
+  }),
+  settingShowAttributes: PropTypes.shape({
+    ...Object.keys(attributes).reduce((acc, attribute) => ({ ...acc, [attribute]: true }), {}),
+  }),
+  toggleShowEmployeeInfo: PropTypes.func,
+};
+
+EmployeeInfo.defaultProps = {
+  isShowEmployeeInfo: false,
+  currentEmployee: {},
+  settingShowAttributes: {},
+  toggleShowEmployeeInfo: () => null,
 };
 
 export default connect(

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -152,6 +153,27 @@ const AddEmployee = ({ employees, addEmployee }) => {
       </Formik>
     </Box>
   );
+};
+
+AddEmployee.propTypes = {
+  employees: PropTypes.arrayOf(PropTypes.shape({
+    ...Object.keys(attributes).reduce(
+      (acc, attribute) => {
+        console.log(attribute);
+        if (attribute === 'personalNumber') {
+          return ({ ...acc, [attribute]: PropTypes.number });
+        }
+        return ({ ...acc, [attribute]: PropTypes.string });
+      },
+      {},
+    ),
+  })),
+  addEmployee: PropTypes.func,
+};
+
+AddEmployee.defaultProps = {
+  employees: [],
+  addEmployee: () => null,
 };
 
 export default connect((state) => ({ employees: state.employees }), actionCreators)(AddEmployee);
