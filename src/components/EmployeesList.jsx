@@ -1,10 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import * as actionCreators from '../actions';
-import { attributes } from '../employeesData/index';
+import { changeCurrentEmployee } from '../actions';
 
 const useStyles = makeStyles({
   root: {
@@ -15,8 +13,10 @@ const useStyles = makeStyles({
   },
 });
 
-const EmployeesList = ({ employees, changeCurrentEmployee }) => {
+const EmployeesList = () => {
   const classes = useStyles();
+  const employees = useSelector((state) => state.employees);
+  const dispatch = useDispatch();
 
   return (
     <TableContainer className={classes.root}>
@@ -34,7 +34,7 @@ const EmployeesList = ({ employees, changeCurrentEmployee }) => {
                 key={employee.personalNumber}
                 hover
                 className={classes.row}
-                onClick={() => changeCurrentEmployee(employee)}
+                onClick={() => dispatch(changeCurrentEmployee(employee))}
               >
                 <TableCell component="th" scope="row" align="center">
                   {employee.surname || 'имя не указано'}
@@ -53,24 +53,4 @@ const EmployeesList = ({ employees, changeCurrentEmployee }) => {
   );
 };
 
-EmployeesList.propTypes = {
-  employees: PropTypes.arrayOf(PropTypes.shape({
-    ...Object.keys(attributes).reduce(
-      (acc, attribute) => {
-        if (attribute === 'personalNumber') {
-          return ({ ...acc, [attribute]: PropTypes.number });
-        }
-        return ({ ...acc, [attribute]: PropTypes.string });
-      },
-      {},
-    ),
-  })),
-  changeCurrentEmployee: PropTypes.func,
-};
-
-EmployeesList.defaultProps = {
-  employees: [],
-  changeCurrentEmployee: () => null,
-};
-
-export default connect((state) => ({ employees: state.employees }), actionCreators)(EmployeesList);
+export default EmployeesList;

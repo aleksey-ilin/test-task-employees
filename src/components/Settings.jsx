@@ -1,9 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import * as actionCreators from '../actions';
+import { changeSettingShowAttributes } from '../actions';
 import { attributes } from '../employeesData/index';
 
 const useStyles = makeStyles({
@@ -12,8 +11,10 @@ const useStyles = makeStyles({
   },
 });
 
-const Settings = ({ settingShowAttributes, changeSettingShowAttributes }) => {
+const Settings = () => {
   const classes = useStyles();
+  const settingShowAttributes = useSelector((state) => state.settingShowAttributes);
+  const dispatch = useDispatch();
 
   return (
     <Box mt={16} display="flex" justifyContent="center" width="100%" height="100%">
@@ -32,7 +33,7 @@ const Settings = ({ settingShowAttributes, changeSettingShowAttributes }) => {
                 <TableCell component="th" scope="row" align="center">
                   <Checkbox
                     checked={settingShowAttributes[attribute]}
-                    onChange={() => changeSettingShowAttributes(attribute)}
+                    onChange={() => dispatch(changeSettingShowAttributes(attribute))}
                     inputProps={{ 'aria-label': 'select all desserts' }}
                   />
                 </TableCell>
@@ -46,20 +47,4 @@ const Settings = ({ settingShowAttributes, changeSettingShowAttributes }) => {
   );
 };
 
-Settings.propTypes = {
-  settingShowAttributes: PropTypes.shape({
-    ...Object.keys(attributes)
-      .reduce((acc, attribute) => ({ ...acc, [attribute]: PropTypes.bool }), {}),
-  }),
-  changeSettingShowAttributes: PropTypes.func,
-};
-
-Settings.defaultProps = {
-  settingShowAttributes: [],
-  changeSettingShowAttributes: () => null,
-};
-
-export default connect(
-  (state) => ({ settingShowAttributes: state.settingShowAttributes }),
-  actionCreators,
-)(Settings);
+export default Settings;

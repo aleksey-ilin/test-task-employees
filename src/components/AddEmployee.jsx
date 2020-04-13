@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import * as actionCreators from '../actions';
+import { addEmployee } from '../actions';
 import { attributes, positions, units } from '../employeesData/index';
 
 const useStyles = makeStyles({
@@ -22,16 +21,18 @@ const useStyles = makeStyles({
   },
 });
 
-const AddEmployee = ({ employees, addEmployee }) => {
+const AddEmployee = () => {
   const [nextUrl, setNextUrl] = useState('');
   const history = useHistory();
   const classes = useStyles();
+  const employees = useSelector((state) => state.employees);
+  const dispatch = useDispatch();
 
   const initialValues = Object.keys(attributes)
     .reduce((acc, attribute) => ({ ...acc, [attribute]: '' }), {});
 
   const submit = (values, { setSubmitting, resetForm }) => {
-    addEmployee(values);
+    dispatch(addEmployee(values));
     resetForm();
     setSubmitting(false);
     if (nextUrl) {
@@ -155,25 +156,4 @@ const AddEmployee = ({ employees, addEmployee }) => {
   );
 };
 
-AddEmployee.propTypes = {
-  employees: PropTypes.arrayOf(PropTypes.shape({
-    ...Object.keys(attributes).reduce(
-      (acc, attribute) => {
-        console.log(attribute);
-        if (attribute === 'personalNumber') {
-          return ({ ...acc, [attribute]: PropTypes.number });
-        }
-        return ({ ...acc, [attribute]: PropTypes.string });
-      },
-      {},
-    ),
-  })),
-  addEmployee: PropTypes.func,
-};
-
-AddEmployee.defaultProps = {
-  employees: [],
-  addEmployee: () => null,
-};
-
-export default connect((state) => ({ employees: state.employees }), actionCreators)(AddEmployee);
+export default AddEmployee;

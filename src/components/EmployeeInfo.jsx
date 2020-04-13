@@ -1,9 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Drawer, List, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import * as actionCreators from '../actions';
+import { toggleShowEmployeeInfo } from '../actions';
 import { attributes } from '../employeesData/index';
 
 const useStyles = makeStyles({
@@ -17,16 +16,17 @@ const useStyles = makeStyles({
   },
 });
 
-const EmployeeInfo = ({
-  isShowEmployeeInfo,
-  currentEmployee,
-  settingShowAttributes,
-  toggleShowEmployeeInfo,
-}) => {
+const EmployeeInfo = () => {
   const classes = useStyles();
+  const {
+    isShowEmployeeInfo,
+    currentEmployee,
+    settingShowAttributes,
+  } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   return (
-    <Drawer anchor="right" open={isShowEmployeeInfo} onClose={() => toggleShowEmployeeInfo()}>
+    <Drawer anchor="right" open={isShowEmployeeInfo} onClose={() => dispatch(toggleShowEmployeeInfo())}>
       <List className={classes.list}>
         {Object.keys(attributes).map((attribute) => (
           settingShowAttributes[attribute] && (
@@ -44,32 +44,4 @@ const EmployeeInfo = ({
   );
 };
 
-EmployeeInfo.propTypes = {
-  isShowEmployeeInfo: PropTypes.bool,
-  currentEmployee: PropTypes.shape({
-    ...Object.keys(attributes).reduce(
-      (acc, attribute) => ({ ...acc, [attribute]: PropTypes.string || PropTypes.number }),
-      {},
-    ),
-  }),
-  settingShowAttributes: PropTypes.shape({
-    ...Object.keys(attributes).reduce((acc, attribute) => ({ ...acc, [attribute]: true }), {}),
-  }),
-  toggleShowEmployeeInfo: PropTypes.func,
-};
-
-EmployeeInfo.defaultProps = {
-  isShowEmployeeInfo: false,
-  currentEmployee: {},
-  settingShowAttributes: {},
-  toggleShowEmployeeInfo: () => null,
-};
-
-export default connect(
-  (state) => ({
-    isShowEmployeeInfo: state.isShowEmployeeInfo,
-    currentEmployee: state.currentEmployee,
-    settingShowAttributes: state.settingShowAttributes,
-  }),
-  actionCreators,
-)(EmployeeInfo);
+export default EmployeeInfo;
